@@ -1,12 +1,12 @@
 {
   "name": "amirhossein103/adminforge",
-  "description": "Modern WordPress Admin Framework for building admin panels, settings pages, meta boxes, and custom fields with PSR-4 architecture.",
-  "type": "wordpress-plugin",
+  "description": "WordPress-native admin framework for building settings pages, meta boxes, and custom fields. Designed exclusively for WordPress theme and plugin developers.",
+  "type": "library",
   "license": "MIT",
   "homepage": "https://github.com/amirhossein103/adminforge",
   "keywords": [
     "wordpress",
-    "wordpress-plugin",
+    "wordpress-library",
     "admin-framework",
     "admin-panel",
     "meta-box",
@@ -18,7 +18,8 @@
   "authors": [
     {
       "name": "Amirhossein",
-      "homepage": "https://github.com/amirhossein103"
+      "homepage": "https://github.com/amirhossein103",
+      "role": "Developer"
     }
   ],
   "support": {
@@ -27,11 +28,14 @@
     "docs": "https://github.com/amirhossein103/adminforge#readme"
   },
   "require": {
-    "php": ">=7.4"
+    "php": ">=8.0"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.7",
     "phpstan/phpstan": "^1.10"
+  },
+  "suggest": {
+    "wordpress": "Requires WordPress 5.8 or higher. This library is designed exclusively for WordPress environments."
   },
   "autoload": {
     "psr-4": {
@@ -51,7 +55,10 @@
   "config": {
     "sort-packages": true,
     "optimize-autoloader": true,
-    "platform-check": false
+    "platform-check": false,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   },
   "minimum-stability": "stable",
   "prefer-stable": true

@@ -18,7 +18,7 @@ defined('ABSPATH') || exit;
 /**
  * SettingsGroup class
  */
-class SettingsGroup
+final class SettingsGroup
 {
     /**
      * Group name

@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
 /**
  * FieldFactory class for creating field instances
  */
-class FieldFactory
+final class FieldFactory
 {
     /**
      * Registered field types
@@ -45,15 +45,36 @@ class FieldFactory
     /**
      * Create field instance
      *
+     * Supports two calling conventions:
+     * 1. create('text', 'field_id', ['label' => 'Label'])
+     * 2. create('text', ['id' => 'field_id', 'label' => 'Label'])
+     *
      * @param string $type Field type
-     * @param string $id Field ID
-     * @param array<string, mixed> $args Field arguments
+     * @param string|array<string, mixed> $idOrConfig Field ID or full config array
+     * @param array<string, mixed> $args Field arguments (only used with Convention 1)
      * @return FieldInterface|null
      */
-    public static function create(string $type, string $id, array $args = []): ?FieldInterface
+    public static function create(string $type, string|array $idOrConfig, array $args = []): ?FieldInterface
     {
         // Check if field type is registered
         if (!isset(self::$fieldTypes[$type])) {
+            return null;
+        }
+
+        // Handle both calling conventions
+        if (is_array($idOrConfig)) {
+            // Convention 2: Config array with 'id' key
+            $config = $idOrConfig;
+            $id = $config['id'] ?? '';
+            unset($config['id']);
+            $args = $config;
+        } else {
+            // Convention 1: Separate ID and args
+            $id = $idOrConfig;
+        }
+
+        // Validate ID
+        if (empty($id)) {
             return null;
         }
 

@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
 /**
  * Config class with dot notation access
  */
-class Config
+final class Config
 {
     /**
      * Configuration data

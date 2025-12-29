@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
 /**
  * TabManager class for tabbed interfaces
  */
-class TabManager
+final class TabManager
 {
     /**
      * Tabs configuration

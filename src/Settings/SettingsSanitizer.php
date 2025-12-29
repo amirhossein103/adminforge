@@ -21,7 +21,7 @@ use AdminForge\Security\SecurityTrait;
 /**
  * SettingsSanitizer class
  */
-class SettingsSanitizer
+final class SettingsSanitizer
 {
     use SecurityTrait;
 

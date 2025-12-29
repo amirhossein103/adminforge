@@ -21,7 +21,7 @@ use AdminForge\Core\Constants;
 /**
  * SettingsCache class
  */
-class SettingsCache
+final class SettingsCache
 {
     /**
      * Cache group name

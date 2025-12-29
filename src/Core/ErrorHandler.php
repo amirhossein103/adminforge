@@ -20,7 +20,7 @@ defined('ABSPATH') || exit;
  *
  * @since 2.0.0
  */
-class ErrorHandler
+final class ErrorHandler
 {
     /**
      * Log levels

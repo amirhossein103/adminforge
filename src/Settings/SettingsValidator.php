@@ -21,7 +21,7 @@ use AdminForge\Security\SecurityTrait;
 /**
  * SettingsValidator class
  */
-class SettingsValidator
+final class SettingsValidator
 {
     use SecurityTrait;
 

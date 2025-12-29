@@ -331,23 +331,21 @@ trait SecurityTrait
     }
 
     /**
-     * Prevent SQL injection (use prepared statements)
+     * Prepare SQL query with placeholders
      *
-     * @param string $value Value to escape for SQL
-     * @return string
-     */
-    protected function escapeSql(string $value): string
-    {
-        global $wpdb;
-        return $wpdb->_escape($value);
-    }
-
-    /**
-     * Prepare SQL query
+     * This is the recommended method for preventing SQL injection.
+     * Use placeholders (%s for strings, %d for integers, %f for floats).
      *
      * @param string $query SQL query with placeholders
      * @param mixed ...$args Values to replace placeholders
-     * @return string|null
+     * @return string|null Prepared query or null on failure
+     *
+     * @example
+     * $sql = $this->prepareSql(
+     *     "SELECT * FROM {$wpdb->posts} WHERE ID = %d AND post_status = %s",
+     *     $post_id,
+     *     'publish'
+     * );
      */
     protected function prepareSql(string $query, ...$args): ?string
     {

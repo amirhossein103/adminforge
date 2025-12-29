@@ -20,7 +20,7 @@ defined('ABSPATH') || exit;
  *
  * @since 2.0.0
  */
-class Cache
+final class Cache
 {
     /**
      * Runtime cache storage

@@ -18,7 +18,7 @@ use AdminForge\Core\Config;
 /**
  * Branding class for customizing admin appearance
  */
-class Branding
+final class Branding
 {
     /**
      * Custom colors

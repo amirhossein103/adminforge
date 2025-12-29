@@ -18,7 +18,7 @@ defined('ABSPATH') || exit;
 /**
  * DataHydrator class
  */
-class DataHydrator
+final class DataHydrator
 {
     /**
      * Registered field keys to hydrate

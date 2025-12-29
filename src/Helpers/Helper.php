@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
 /**
  * Helper class with common utility functions
  */
-class Helper
+final class Helper
 {
     /**
      * Get all WordPress pages

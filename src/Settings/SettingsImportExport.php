@@ -20,7 +20,7 @@ use AdminForge\Security\SecurityTrait;
 /**
  * SettingsImportExport class
  */
-class SettingsImportExport
+final class SettingsImportExport
 {
     use SecurityTrait;
 

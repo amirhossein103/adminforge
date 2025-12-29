@@ -18,7 +18,7 @@ defined('ABSPATH') || exit;
 /**
  * MetaHelper class - Singleton pattern with static cache
  */
-class MetaHelper
+final class MetaHelper
 {
     /**
      * Singleton instance

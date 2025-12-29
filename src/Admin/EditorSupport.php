@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
 /**
  * EditorSupport class
  */
-class EditorSupport
+final class EditorSupport
 {
     /**
      * Check if Gutenberg is active

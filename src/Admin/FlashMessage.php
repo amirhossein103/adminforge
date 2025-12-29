@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
 /**
  * FlashMessage class using transients
  */
-class FlashMessage
+final class FlashMessage
 {
     /**
      * Transient key prefix

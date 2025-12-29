@@ -19,7 +19,7 @@ defined('ABSPATH') || exit;
 /**
  * SettingsManager class
  */
-class SettingsManager
+final class SettingsManager
 {
     /**
      * Option name in database

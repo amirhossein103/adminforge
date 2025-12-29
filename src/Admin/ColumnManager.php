@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
 /**
  * ColumnManager class for managing admin list table columns
  */
-class ColumnManager
+final class ColumnManager
 {
     /**
      * Post type

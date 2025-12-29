@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
 /**
  * AssetManager class for optimized asset loading
  */
-class AssetManager
+final class AssetManager
 {
     /**
      * Registered scripts

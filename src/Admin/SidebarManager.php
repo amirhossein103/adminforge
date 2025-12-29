@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
 /**
  * SidebarManager class for custom sidebar registration
  */
-class SidebarManager
+final class SidebarManager
 {
     /**
      * Registered sidebars

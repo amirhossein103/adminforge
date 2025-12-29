@@ -36,7 +36,7 @@ defined('ABSPATH') || exit;
  * Settings::group('appearance')->all();
  * Settings::group('features')->get('enabled');
  */
-class Settings
+final class Settings
 {
     /**
      * Manager instance

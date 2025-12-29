@@ -2,10 +2,10 @@
 /**
  * Plugin Name: AdminForge - WordPress Admin Framework
  * Plugin URI: https://github.com/amirhossein103/adminforge
- * Description: Modern WordPress Admin Framework for building admin panels, settings pages, meta boxes, and custom fields with PSR-4 architecture.
+ * Description: WordPress-native admin framework library for building admin panels, settings pages, meta boxes, and custom fields. Designed for theme and plugin developers. Install via Composer: composer require amirhossein103/adminforge
  * Version: 1.0.0
  * Requires at least: 5.8
- * Requires PHP: 7.4
+ * Requires PHP: 8.0
  * Author: Amirhossein
  * Author URI: https://github.com/amirhossein103
  * License: MIT

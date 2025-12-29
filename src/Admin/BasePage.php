@@ -210,7 +210,7 @@ abstract class BasePage
      *
      * @return string|false
      */
-    public function getHookSuffix()
+    public function getHookSuffix(): string|false
     {
         return $this->hookSuffix;
     }
