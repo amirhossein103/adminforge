@@ -1,0 +1,58 @@
+{
+  "name": "amirhossein103/adminforge",
+  "description": "Modern WordPress Admin Framework for building admin panels, settings pages, meta boxes, and custom fields with PSR-4 architecture.",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "homepage": "https://github.com/amirhossein103/adminforge",
+  "keywords": [
+    "wordpress",
+    "wordpress-plugin",
+    "admin-framework",
+    "admin-panel",
+    "meta-box",
+    "settings-api",
+    "custom-fields",
+    "psr-4",
+    "wp-admin"
+  ],
+  "authors": [
+    {
+      "name": "Amirhossein",
+      "homepage": "https://github.com/amirhossein103"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/amirhossein103/adminforge/issues",
+    "source": "https://github.com/amirhossein103/adminforge",
+    "docs": "https://github.com/amirhossein103/adminforge#readme"
+  },
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.7",
+    "phpstan/phpstan": "^1.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "AdminForge\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "AdminForge\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "phpcs": "phpcs --standard=PSR12 src/",
+    "phpcbf": "phpcbf --standard=PSR12 src/",
+    "phpstan": "phpstan analyse src/ --level=5"
+  },
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true,
+    "platform-check": false
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

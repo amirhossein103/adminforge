@@ -1,0 +1,286 @@
+/**
+ * AdminForge - Admin Styles
+ * @package AdminForge
+ * @since 1.0.0
+ */
+
+:root {
+    --af-primary: #0073aa;
+    --af-secondary: #00a0d2;
+    --af-success: #46b450;
+    --af-error: #dc3232;
+    --af-warning: #ffb900;
+    --af-dark: #23282d;
+    --af-light: #f1f1f1;
+    --af-border: #ddd;
+}
+
+/* AdminForge Container */
+.adminforge-wrap {
+    margin: 20px 20px 0 0;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Header */
+.adminforge-header {
+    background: var(--af-dark);
+    color: #fff;
+    padding: 20px 30px;
+    border-bottom: 3px solid var(--af-primary);
+}
+
+.adminforge-header h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 24px;
+}
+
+/* Tabs */
+.adminforge-tabs {
+    display: flex;
+    background: var(--af-light);
+    border-bottom: 1px solid var(--af-border);
+}
+
+.adminforge-tab {
+    padding: 15px 25px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.adminforge-tab:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+.adminforge-tab.active {
+    background: #fff;
+    border-bottom-color: var(--af-primary);
+    font-weight: 600;
+}
+
+/* Content */
+.adminforge-content {
+    padding: 30px;
+}
+
+.adminforge-tab-content {
+    display: none;
+}
+
+.adminforge-tab-content.active {
+    display: block;
+}
+
+/* Fields */
+.adminforge-field {
+    margin-bottom: 25px;
+}
+
+.adminforge-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--af-dark);
+}
+
+.adminforge-field input[type="text"],
+.adminforge-field input[type="email"],
+.adminforge-field input[type="url"],
+.adminforge-field input[type="number"],
+.adminforge-field textarea,
+.adminforge-field select {
+    width: 100%;
+    max-width: 600px;
+    padding: 8px 12px;
+    border: 1px solid var(--af-border);
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.adminforge-field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.adminforge-field-hint {
+    display: block;
+    margin-top: 5px;
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Buttons */
+.adminforge-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.adminforge-btn-primary {
+    background: var(--af-primary);
+    color: #fff;
+}
+
+.adminforge-btn-primary:hover {
+    background: #005177;
+}
+
+/* Notices */
+.adminforge-notice {
+    padding: 15px;
+    margin: 20px 0;
+    border-left: 4px solid;
+    border-radius: 4px;
+}
+
+.adminforge-notice.success {
+    background: #ecf7ed;
+    border-color: var(--af-success);
+    color: #2d5c2f;
+}
+
+.adminforge-notice.error {
+    background: #fef7f7;
+    border-color: var(--af-error);
+    color: #7c2323;
+}
+
+/* Loader */
+.adminforge-loader {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Repeater Field */
+.adminforge-repeater-wrapper {
+    border: 1px solid var(--af-border);
+    border-radius: 4px;
+    padding: 15px;
+    background: #fafafa;
+}
+
+.adminforge-repeater-rows {
+    margin-bottom: 15px;
+}
+
+.adminforge-repeater-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: #fff;
+    border: 1px solid var(--af-border);
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.adminforge-repeater-handle {
+    cursor: move;
+    padding: 5px;
+    color: #999;
+}
+
+.adminforge-repeater-handle:hover {
+    color: #333;
+}
+
+.adminforge-repeater-content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.adminforge-repeater-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.adminforge-repeater-field label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+.adminforge-repeater-field input,
+.adminforge-repeater-field select,
+.adminforge-repeater-field textarea {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid var(--af-border);
+    border-radius: 3px;
+}
+
+.adminforge-repeater-actions {
+    display: flex;
+    align-items: center;
+}
+
+.adminforge-repeater-remove {
+    background: var(--af-error);
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.3s;
+}
+
+.adminforge-repeater-remove:hover {
+    background: #c12020;
+}
+
+.adminforge-repeater-remove .dashicons {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+}
+
+.adminforge-repeater-add {
+    background: var(--af-primary);
+    color: #fff;
+    border: none;
+}
+
+.adminforge-repeater-add:hover {
+    background: #005177;
+}
+
+.adminforge-repeater-placeholder {
+    background: #f0f0f1;
+    border: 2px dashed var(--af-border);
+    margin-bottom: 10px;
+}
+
+/* Checkbox/Radio in repeater */
+.adminforge-checkbox-label,
+.adminforge-radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.adminforge-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
