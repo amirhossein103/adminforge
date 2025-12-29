@@ -13,6 +13,8 @@ namespace AdminForge\Helpers;
 // Security: Exit if accessed directly
 defined('ABSPATH') || exit;
 
+use AdminForge\Core\ErrorHandler;
+
 /**
  * Helper class with common utility functions
  */
@@ -212,24 +214,6 @@ final class Helper
         return $terms;
     }
 
-    /**
-     * Sanitize array recursively
-     *
-     * @param array<mixed> $data Data to sanitize
-     * @return array<mixed>
-     */
-    public static function sanitizeArray(array $data): array
-    {
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                $data[$key] = self::sanitizeArray($value);
-            } else {
-                $data[$key] = sanitize_text_field($value);
-            }
-        }
-
-        return $data;
-    }
 
     /**
      * Check if current page is in admin
@@ -271,13 +255,11 @@ final class Helper
      */
     public static function debug($data, string $label = ''): void
     {
-        if (!defined('WP_DEBUG') || !WP_DEBUG) {
-            return;
+        $context = is_array($data) || is_object($data) ? ['data' => $data] : ['value' => $data];
+        if ($label) {
+            $context['label'] = $label;
         }
 
-        $message = $label ? "[$label] " : '';
-        $message .= print_r($data, true);
-
-        error_log($message);
+        ErrorHandler::info($label ?: 'Debug', $context);
     }
 }

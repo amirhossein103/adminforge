@@ -19,6 +19,7 @@ use AdminForge\Settings\Settings;
 use AdminForge\Fields\FieldFactory;
 use AdminForge\Fields\FieldInterface;
 use AdminForge\Core\ErrorHandler;
+use AdminForge\Security\SecurityTrait;
 
 /**
  * SettingsPage class - Extends MenuPage with Settings integration
@@ -30,6 +31,8 @@ use AdminForge\Core\ErrorHandler;
  */
 class SettingsPage extends MenuPage
 {
+    use SecurityTrait;
+
     /**
      * Settings group (used as prefix for Settings API)
      *
@@ -45,6 +48,13 @@ class SettingsPage extends MenuPage
     private array $fields = [];
 
     /**
+     * Page configuration
+     *
+     * @var array<string, mixed>
+     */
+    private array $config = [];
+
+    /**
      * Constructor
      *
      * @param string $title Page title
@@ -54,16 +64,20 @@ class SettingsPage extends MenuPage
     public function __construct(string $title, string $settingsGroup, array $config = [])
     {
         $this->settingsGroup = $settingsGroup;
+        $this->config = $config;
 
-        // Set default slug if not provided
-        if (!isset($config['slug'])) {
-            $config['slug'] = sanitize_title($settingsGroup);
-        }
+        // Set properties from config
+        $this->pageTitle = $title;
+        $this->menuTitle = $config['menu_title'] ?? $title;
+        $this->capability = $config['capability'] ?? 'manage_options';
+        $this->slug = $config['slug'] ?? sanitize_title($settingsGroup);
+        $this->icon = $config['icon'] ?? 'dashicons-admin-generic';
+        $this->position = $config['position'] ?? null;
 
-        parent::__construct($title, $config);
+        parent::__construct();
 
         // Hook into save action
-        add_action('admin_post_' . $this->getSlug() . '_save', [$this, 'handleSave']);
+        add_action('admin_post_' . $this->slug . '_save', [$this, 'handleSave']);
     }
 
     /**
@@ -126,6 +140,26 @@ class SettingsPage extends MenuPage
     }
 
     /**
+     * Get page title
+     *
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->pageTitle;
+    }
+
+    /**
+     * Get page description
+     *
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->config['description'] ?? '';
+    }
+
+    /**
      * Render page content
      *
      * @return void
@@ -134,24 +168,26 @@ class SettingsPage extends MenuPage
     {
         ?>
         <div class="wrap">
-            <h1><?php echo esc_html($this->getTitle()); ?></h1>
+            <h1><?php echo esc_html($this->pageTitle); ?></h1>
 
             <?php if (!empty($this->getDescription())): ?>
                 <p class="description"><?php echo esc_html($this->getDescription()); ?></p>
             <?php endif; ?>
 
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                <?php wp_nonce_field($this->getSlug() . '_save', $this->getSlug() . '_nonce'); ?>
-                <input type="hidden" name="action" value="<?php echo esc_attr($this->getSlug() . '_save'); ?>">
+                <?php wp_nonce_field($this->slug . '_save', $this->slug . '_nonce'); ?>
+                <input type="hidden" name="action" value="<?php echo esc_attr($this->slug . '_save'); ?>">
 
                 <table class="form-table" role="presentation">
                     <?php foreach ($this->fields as $field): ?>
                         <tr>
                             <th scope="row">
-                                <?php echo $field->renderLabel(); ?>
+                                <label for="<?php echo esc_attr($field->getId()); ?>">
+                                    <?php echo esc_html($field->getLabel()); ?>
+                                </label>
                             </th>
                             <td>
-                                <?php echo $field->render(); ?>
+                                <?php $field->render(); ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -171,14 +207,19 @@ class SettingsPage extends MenuPage
     public function handleSave(): void
     {
         // Verify nonce
-        if (!isset($_POST[$this->getSlug() . '_nonce']) ||
-            !wp_verify_nonce($_POST[$this->getSlug() . '_nonce'], $this->getSlug() . '_save')) {
-            ErrorHandler::error('Nonce verification failed for settings page: ' . $this->getSlug());
+        if (!isset($_POST[$this->slug . '_nonce'])) {
+            ErrorHandler::error('Nonce not set for settings page: ' . $this->slug);
+            wp_die(__('Security check failed', 'adminforge'));
+        }
+
+        $nonce = $this->sanitizeText(wp_unslash($_POST[$this->slug . '_nonce']));
+        if (!$this->verifyNonce($nonce, $this->slug . '_save')) {
+            ErrorHandler::error('Nonce verification failed for settings page: ' . $this->slug);
             wp_die(__('Security check failed', 'adminforge'));
         }
 
         // Check user capabilities
-        if (!current_user_can('manage_options')) {
+        if (!$this->userCan('manage_options')) {
             wp_die(__('You do not have permission to save settings', 'adminforge'));
         }
 
@@ -189,24 +230,25 @@ class SettingsPage extends MenuPage
         // Process each field
         foreach ($this->fields as $field) {
             $key = $field->getId();
-            $value = $field->getValue();
 
-            // Get field config for validation
-            $config = $field->getConfig();
+            // Get value from POST (for checkboxes, null means unchecked)
+            $rawValue = $_POST[$key] ?? null;
+
+            // Sanitize using field's sanitize method
+            $value = $field->sanitize($rawValue);
+
+            // Validate using field's validate method
+            if (!$field->validate($value)) {
+                $errors[] = $field->getLabel();
+                ErrorHandler::validationError(
+                    $key,
+                    sprintf('Validation failed for setting: %s', $field->getLabel())
+                );
+                continue;
+            }
 
             // Save to Settings API
-            $options = [];
-            if (isset($config['validate'])) {
-                $options['validate'] = $config['validate'];
-            }
-            if (isset($config['sanitize'])) {
-                $options['sanitize'] = $config['sanitize'];
-            }
-            if (isset($config['type'])) {
-                $options['type'] = $config['type'];
-            }
-
-            if ($group->set($key, $value, $options)) {
+            if ($group->set($key, $value)) {
                 $saved++;
             } else {
                 $errors[] = $field->getLabel();
@@ -219,32 +261,12 @@ class SettingsPage extends MenuPage
 
         // Redirect with status
         $redirect = add_query_arg([
-            'page' => $this->getSlug(),
+            'page' => $this->slug,
             'saved' => $saved,
             'errors' => count($errors),
         ], admin_url('admin.php'));
 
         wp_redirect($redirect);
         exit;
-    }
-
-    /**
-     * Get page slug
-     *
-     * @return string
-     */
-    private function getSlug(): string
-    {
-        return $this->config['slug'] ?? sanitize_title($this->title);
-    }
-
-    /**
-     * Get page description
-     *
-     * @return string
-     */
-    private function getDescription(): string
-    {
-        return $this->config['description'] ?? '';
     }
 }

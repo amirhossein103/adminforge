@@ -14,13 +14,16 @@ namespace AdminForge\MetaBox;
 defined('ABSPATH') || exit;
 
 use AdminForge\Core\Config;
+use AdminForge\Core\ErrorHandler;
 use AdminForge\Helpers\DataHydrator;
+use AdminForge\Security\SecurityTrait;
 
 /**
  * MetaBox class for custom meta boxes
  */
 class MetaBox
 {
+    use SecurityTrait;
     /**
      * Meta box ID
      *
@@ -177,9 +180,7 @@ class MetaBox
 
         // Validate field ID
         if (empty($fieldId) || !preg_match('/^[a-zA-Z0-9_-]+$/', $fieldId)) {
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('AdminForge: Invalid field ID in meta box: ' . $this->id);
-            }
+            ErrorHandler::warning('Invalid field ID in meta box: ' . $this->id, ['field_id' => $fieldId]);
             return;
         }
 
@@ -294,8 +295,9 @@ class MetaBox
                 return;
             }
 
-            $nonce_result = wp_verify_nonce(sanitize_text_field(wp_unslash($_POST[$this->nonceName])), $this->nonceAction);
-            if ($nonce_result !== 1) {
+            $nonce = $this->sanitizeText(wp_unslash($_POST[$this->nonceName]));
+            if (!$this->verifyNonce($nonce, $this->nonceAction)) {
+                ErrorHandler::error('Nonce verification failed for meta box: ' . $this->id);
                 return;
             }
         }
@@ -362,25 +364,8 @@ class MetaBox
     {
         $fieldType = $field['type'] ?? 'text';
 
-        switch ($fieldType) {
-            case 'email':
-                return sanitize_email($value);
-
-            case 'url':
-                return esc_url_raw($value);
-
-            case 'number':
-                return is_numeric($value) ? $value : 0;
-
-            case 'textarea':
-                return sanitize_textarea_field($value);
-
-            case 'checkbox':
-                return $value ? 1 : 0;
-
-            default:
-                return sanitize_text_field($value);
-        }
+        // Use SecurityTrait for sanitization
+        return $this->sanitizeByType($value, $fieldType);
     }
 
     /**

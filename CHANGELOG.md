@@ -5,6 +5,37 @@ All notable changes to AdminForge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-12-29
+
+### Fixed
+- Fixed SettingsPage constructor compatibility with MenuPage parent class
+- Fixed namespace issue in adminforge.php initialization (Core\AdminForge instead of AdminForge\Core\AdminForge)
+- Fixed BaseField render() method to work properly with SettingsPage table layout
+- Fixed renderLabel() visibility from protected to public in FieldInterface
+- Fixed checkbox field handling when unchecked (null value in POST)
+
+### Changed
+- **BREAKING**: Removed SettingsCache class - SettingsManager now uses Core/Cache directly
+- Replaced all error_log() calls with ErrorHandler for centralized logging
+- Replaced all wp_verify_nonce() direct calls with SecurityTrait methods
+- Integrated FlashMessage with ErrorHandler for unified notification display
+- Removed duplicate sanitizeArray() method from Helper class (use SecurityTrait instead)
+- Simplified SettingsSanitizer to delegate common types to SecurityTrait
+
+### Added
+- Added renderWithWrapper() method to BaseField for full field rendering with label and wrapper
+- Added getTitle() method to SettingsPage for accessing page title
+- Added getDescription() method to SettingsPage for accessing page description
+- Added clearCache() method to SettingsManager
+- Added test-settings-page.php example file demonstrating complete usage
+
+### Improved
+- MetaBox now uses SecurityTrait for all sanitization and nonce verification
+- All field validation now uses centralized SecurityTrait validation methods
+- Better error messages with context arrays in ErrorHandler calls
+- Consistent security practices across all classes (no direct WordPress function calls)
+- Reduced code duplication by ~700 lines through proper use of global modules
+
 ## [1.0.0] - 2025-12-29
 
 ### Added (Initial Stable Release)

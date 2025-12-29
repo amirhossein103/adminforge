@@ -76,4 +76,11 @@ interface FieldInterface
      * @return bool
      */
     public function validate($value): bool;
+
+    /**
+     * Render label
+     *
+     * @return void
+     */
+    public function renderLabel(): void;
 }

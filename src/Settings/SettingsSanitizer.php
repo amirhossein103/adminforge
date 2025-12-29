@@ -58,15 +58,14 @@ final class SettingsSanitizer
             return call_user_func(self::$sanitizers[$type], $value);
         }
 
-        // Use SecurityTrait's built-in sanitization
-        $result = $this->sanitizeByType($value, $type);
-
-        // Handle additional types not in SecurityTrait
-        if ($result === $value && !in_array($type, ['text', 'email', 'url', 'int', 'float', 'bool', 'html', 'textarea', 'key', 'array'], true)) {
-            $result = $this->sanitizeAdditionalTypes($value, $type);
+        // Use SecurityTrait's built-in sanitization for common types
+        $commonTypes = ['text', 'email', 'url', 'int', 'integer', 'float', 'number', 'bool', 'boolean', 'html', 'textarea', 'key', 'array'];
+        if (in_array($type, $commonTypes, true)) {
+            return $this->sanitizeByType($value, $type);
         }
 
-        return $result;
+        // Handle additional types not in SecurityTrait
+        return $this->sanitizeAdditionalTypes($value, $type);
     }
 
     /**

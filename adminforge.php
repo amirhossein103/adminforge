@@ -3,7 +3,7 @@
  * Plugin Name: AdminForge - WordPress Admin Framework
  * Plugin URI: https://github.com/amirhossein103/adminforge
  * Description: WordPress-native admin framework library for building admin panels, settings pages, meta boxes, and custom fields. Designed for theme and plugin developers. Install via Composer: composer require amirhossein103/adminforge
- * Version: 1.0.0
+ * Version: 1.1.0
  * Requires at least: 5.8
  * Requires PHP: 8.0
  * Author: Amirhossein
@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('ADMINFORGE_VERSION', '1.0.0');
+define('ADMINFORGE_VERSION', '1.1.0');
 define('ADMINFORGE_FILE', __FILE__);
 define('ADMINFORGE_PATH', plugin_dir_path(__FILE__));
 define('ADMINFORGE_URL', plugin_dir_url(__FILE__));
@@ -63,7 +63,7 @@ spl_autoload_register(function ($class) {
 function adminforge_init(): void
 {
     if (class_exists('AdminForge\Core\AdminForge')) {
-        AdminForge\Core\AdminForge::getInstance();
+        Core\AdminForge::getInstance();
     }
 }
 

@@ -405,13 +405,13 @@ final class Settings
     }
 
     /**
-     * Get cache manager
+     * Clear all caches
      *
-     * @return SettingsCache
+     * @return void
      */
-    public static function cache(): SettingsCache
+    public static function clearCache(): void
     {
-        return self::manager()->cache();
+        self::manager()->clearCache();
     }
 
     /**
@@ -438,13 +438,4 @@ final class Settings
         SettingsSanitizer::register($name, $callback);
     }
 
-    /**
-     * Clear all caches
-     *
-     * @return void
-     */
-    public static function clearCache(): void
-    {
-        self::manager()->cache()->clear();
-    }
 }

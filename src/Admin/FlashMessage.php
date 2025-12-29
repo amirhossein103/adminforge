@@ -13,8 +13,10 @@ namespace AdminForge\Admin;
 // Security: Exit if accessed directly
 defined('ABSPATH') || exit;
 
+use AdminForge\Core\ErrorHandler;
+
 /**
- * FlashMessage class using transients
+ * FlashMessage class using transients and ErrorHandler
  */
 final class FlashMessage
 {
@@ -184,30 +186,9 @@ final class FlashMessage
                 continue;
             }
 
-            self::renderMessage($message, $type);
+            // Use ErrorHandler for consistent notification display
+            ErrorHandler::notify($message, $type);
         }
-    }
-
-    /**
-     * Render single message
-     *
-     * @param string $message Message text
-     * @param string $type Message type
-     * @return void
-     */
-    private static function renderMessage(string $message, string $type): void
-    {
-        $class = 'notice notice-' . $type;
-
-        if ($type === self::TYPE_SUCCESS) {
-            $class .= ' is-dismissible';
-        }
-
-        printf(
-            '<div class="%s"><p>%s</p></div>',
-            esc_attr($class),
-            esc_html($message)
-        );
     }
 
     /**

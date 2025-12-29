@@ -117,11 +117,26 @@ abstract class BaseField implements FieldInterface
     }
 
     /**
-     * Render field wrapper
+     * Render field (only input without wrapper)
      *
      * @return void
      */
     public function render(): void
+    {
+        $this->renderField();
+
+        // Render description if available
+        if (!empty($this->description)) {
+            $this->renderDescription();
+        }
+    }
+
+    /**
+     * Render field with full wrapper (label + input + description)
+     *
+     * @return void
+     */
+    public function renderWithWrapper(): void
     {
         $wrapperClasses = array_merge(['adminforge-field'], $this->classes);
         $conditionalAttr = $this->getConditionalAttribute();
@@ -149,7 +164,7 @@ abstract class BaseField implements FieldInterface
      *
      * @return void
      */
-    protected function renderLabel(): void
+    public function renderLabel(): void
     {
         echo '<label for="' . esc_attr($this->id) . '">';
         echo esc_html($this->label);

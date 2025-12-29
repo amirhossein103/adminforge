@@ -16,6 +16,10 @@ namespace AdminForge\Settings;
 // Security: Exit if accessed directly
 defined('ABSPATH') || exit;
 
+use AdminForge\Core\Cache;
+use AdminForge\Core\Constants;
+use AdminForge\Core\ErrorHandler;
+
 /**
  * SettingsManager class
  */
@@ -32,11 +36,9 @@ final class SettingsManager
     private const DEFAULTS_NAME = 'adminforge_settings_defaults';
 
     /**
-     * Cache instance
-     *
-     * @var SettingsCache
+     * Cache group
      */
-    private SettingsCache $cache;
+    private const CACHE_GROUP = 'adminforge_settings';
 
     /**
      * Validator instance
@@ -64,7 +66,6 @@ final class SettingsManager
      */
     public function __construct()
     {
-        $this->cache = new SettingsCache();
         $this->validator = new SettingsValidator();
         $this->sanitizer = new SettingsSanitizer();
         $this->loadDefaults();
@@ -89,7 +90,7 @@ final class SettingsManager
     private function loadSettings(): array
     {
         // Check cache first
-        $cached = $this->cache->get('all_settings');
+        $cached = Cache::get('all_settings', self::CACHE_GROUP);
         if ($cached !== null) {
             return $cached;
         }
@@ -101,7 +102,7 @@ final class SettingsManager
         }
 
         // Cache it
-        $this->cache->set('all_settings', $settings);
+        Cache::set('all_settings', $settings, Constants::DEFAULT_CACHE_DURATION, self::CACHE_GROUP);
 
         return $settings;
     }
@@ -118,8 +119,7 @@ final class SettingsManager
 
         if ($result) {
             // Update cache
-            $this->cache->set('all_settings', $settings);
-            $this->cache->increment('version');
+            Cache::set('all_settings', $settings, Constants::DEFAULT_CACHE_DURATION, self::CACHE_GROUP);
         }
 
         return $result;
@@ -136,7 +136,7 @@ final class SettingsManager
     {
         // Check cache first
         $cacheKey = 'key_' . $key;
-        $cached = $this->cache->get($cacheKey);
+        $cached = Cache::get($cacheKey, self::CACHE_GROUP);
         if ($cached !== null) {
             return $cached;
         }
@@ -145,7 +145,7 @@ final class SettingsManager
         $value = $this->getNestedValue($settings, $key, $default);
 
         // Cache individual key
-        $this->cache->set($cacheKey, $value);
+        Cache::set($cacheKey, $value, Constants::DEFAULT_CACHE_DURATION, self::CACHE_GROUP);
 
         return $value;
     }
@@ -170,16 +170,12 @@ final class SettingsManager
         // Validate if validator specified
         if (isset($options['validate']) && is_callable($options['validate'])) {
             if (!call_user_func($options['validate'], $value)) {
-                if (defined('WP_DEBUG') && WP_DEBUG) {
-                    error_log("AdminForge: Validation failed for key: {$key}");
-                }
+                ErrorHandler::warning("Validation failed for key: {$key}");
                 return false;
             }
         } elseif (isset($options['type'])) {
             if (!$this->validator->validate($value, $options['type'])) {
-                if (defined('WP_DEBUG') && WP_DEBUG) {
-                    error_log("AdminForge: Type validation failed for key: {$key}");
-                }
+                ErrorHandler::warning("Type validation failed for key: {$key}", ['type' => $options['type']]);
                 return false;
             }
         }
@@ -191,7 +187,7 @@ final class SettingsManager
 
         if ($result) {
             // Clear specific key cache
-            $this->cache->remove('key_' . $key);
+            Cache::delete('key_' . $key, self::CACHE_GROUP);
         }
 
         return $result;
@@ -229,7 +225,7 @@ final class SettingsManager
             }
 
             $this->setNestedValue($allSettings, $key, $value);
-            $this->cache->remove('key_' . $key);
+            Cache::delete('key_' . $key, self::CACHE_GROUP);
             $hasChanges = true;
         }
 
@@ -286,7 +282,7 @@ final class SettingsManager
         // Remove the key
         if (isset($current[$lastKey])) {
             unset($current[$lastKey]);
-            $this->cache->remove('key_' . $key);
+            Cache::delete('key_' . $key, self::CACHE_GROUP);
             return $this->saveSettings($settings);
         }
 
@@ -342,7 +338,7 @@ final class SettingsManager
      */
     public function resetAll(): bool
     {
-        $this->cache->clear();
+        Cache::flush(self::CACHE_GROUP);
         return delete_option(self::OPTION_NAME);
     }
 
@@ -406,12 +402,12 @@ final class SettingsManager
     }
 
     /**
-     * Get cache instance
+     * Clear cache
      *
-     * @return SettingsCache
+     * @return void
      */
-    public function cache(): SettingsCache
+    public function clearCache(): void
     {
-        return $this->cache;
+        Cache::flush(self::CACHE_GROUP);
     }
 }
