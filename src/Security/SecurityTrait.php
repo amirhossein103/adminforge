@@ -66,117 +66,6 @@ trait SecurityTrait
     }
 
     /**
-     * Sanitize textarea
-     *
-     * @param mixed $value Value to sanitize
-     * @return string
-     */
-    protected function sanitizeTextarea($value): string
-    {
-        return sanitize_textarea_field($value);
-    }
-
-    /**
-     * Sanitize email
-     *
-     * @param mixed $value Value to sanitize
-     * @return string
-     */
-    protected function sanitizeEmail($value): string
-    {
-        return sanitize_email($value);
-    }
-
-    /**
-     * Sanitize URL
-     *
-     * @param mixed $value Value to sanitize
-     * @return string
-     */
-    protected function sanitizeUrl($value): string
-    {
-        return esc_url_raw($value);
-    }
-
-    /**
-     * Sanitize integer
-     *
-     * @param mixed $value Value to sanitize
-     * @return int
-     */
-    protected function sanitizeInt($value): int
-    {
-        return (int) $value;
-    }
-
-    /**
-     * Sanitize float
-     *
-     * @param mixed $value Value to sanitize
-     * @return float
-     */
-    protected function sanitizeFloat($value): float
-    {
-        return (float) $value;
-    }
-
-    /**
-     * Sanitize boolean
-     *
-     * @param mixed $value Value to sanitize
-     * @return bool
-     */
-    protected function sanitizeBool($value): bool
-    {
-        return (bool) $value;
-    }
-
-    /**
-     * Sanitize array recursively
-     *
-     * @param array<mixed> $data Array to sanitize
-     * @param callable|null $callback Custom sanitization callback
-     * @return array<mixed>
-     */
-    protected function sanitizeArray(array $data, ?callable $callback = null): array
-    {
-        return map_deep($data, $callback ?? 'sanitize_text_field');
-    }
-
-    /**
-     * Sanitize HTML (allow safe tags)
-     *
-     * @param mixed $value Value to sanitize
-     * @return string
-     */
-    protected function sanitizeHtml($value): string
-    {
-        return wp_kses_post($value);
-    }
-
-    /**
-     * Sanitize key (alphanumeric + dashes/underscores)
-     *
-     * @param mixed $value Value to sanitize
-     * @return string
-     */
-    protected function sanitizeKey($value): string
-    {
-        return sanitize_key($value);
-    }
-
-    /**
-     * Sanitize file name
-     *
-     * @param mixed $value Value to sanitize
-     * @return string
-     */
-    protected function sanitizeFileName($value): string
-    {
-        return sanitize_file_name($value);
-    }
-
-    /**
      * Validate email
      *
      * @param string $email Email to validate
@@ -199,6 +88,18 @@ trait SecurityTrait
     }
 
     /**
+     * Sanitize array recursively
+     *
+     * @param array<mixed> $data Array to sanitize
+     * @param callable|null $callback Custom sanitization callback
+     * @return array<mixed>
+     */
+    protected function sanitizeArray(array $data, ?callable $callback = null): array
+    {
+        return map_deep($data, $callback ?? 'sanitize_text_field');
+    }
+
+    /**
      * Check user capability
      *
      * @param string $capability Capability to check
@@ -215,74 +116,6 @@ trait SecurityTrait
         return $user && $user->has_cap($capability);
     }
 
-    /**
-     * Verify AJAX referer
-     *
-     * @param string $action Action name
-     * @param string $queryArg Query argument
-     * @param bool $die Die on failure
-     * @return bool
-     */
-    protected function checkAjaxReferer(string $action, string $queryArg = '_wpnonce', bool $die = true): bool
-    {
-        $result = check_ajax_referer($action, $queryArg, $die);
-        return $result !== false;
-    }
-
-    /**
-     * Escape HTML attribute
-     *
-     * @param string $text Text to escape
-     * @return string
-     */
-    protected function escAttr(string $text): string
-    {
-        return esc_attr($text);
-    }
-
-    /**
-     * Escape HTML
-     *
-     * @param string $text Text to escape
-     * @return string
-     */
-    protected function escHtml(string $text): string
-    {
-        return esc_html($text);
-    }
-
-    /**
-     * Escape URL
-     *
-     * @param string $url URL to escape
-     * @return string
-     */
-    protected function escUrl(string $url): string
-    {
-        return esc_url($url);
-    }
-
-    /**
-     * Escape JavaScript
-     *
-     * @param string $text Text to escape
-     * @return string
-     */
-    protected function escJs(string $text): string
-    {
-        return esc_js($text);
-    }
-
-    /**
-     * Escape textarea
-     *
-     * @param string $text Text to escape
-     * @return string
-     */
-    protected function escTextarea(string $text): string
-    {
-        return esc_textarea($text);
-    }
 
     /**
      * Validate and sanitize input based on type
@@ -295,38 +128,38 @@ trait SecurityTrait
     {
         switch ($type) {
             case 'email':
-                return $this->sanitizeEmail($value);
+                return sanitize_email($value);
 
             case 'url':
-                return $this->sanitizeUrl($value);
+                return esc_url_raw($value);
 
             case 'int':
             case 'integer':
-                return $this->sanitizeInt($value);
+                return (int) $value;
 
             case 'float':
             case 'number':
-                return $this->sanitizeFloat($value);
+                return (float) $value;
 
             case 'bool':
             case 'boolean':
-                return $this->sanitizeBool($value);
+                return (bool) $value;
 
             case 'html':
-                return $this->sanitizeHtml($value);
+                return wp_kses_post($value);
 
             case 'textarea':
-                return $this->sanitizeTextarea($value);
+                return sanitize_textarea_field($value);
 
             case 'key':
-                return $this->sanitizeKey($value);
+                return sanitize_key($value);
 
             case 'array':
                 return is_array($value) ? $this->sanitizeArray($value) : [];
 
             case 'text':
             default:
-                return $this->sanitizeText($value);
+                return sanitize_text_field($value);
         }
     }
 

@@ -108,6 +108,7 @@ final class Config
     {
         $keys = explode('.', $key);
         $config = &self::$config;
+        $lastKey = array_pop($keys);
 
         foreach ($keys as $k) {
             if (!isset($config[$k]) || !is_array($config[$k])) {
@@ -116,7 +117,7 @@ final class Config
             $config = &$config[$k];
         }
 
-        $config = $value;
+        $config[$lastKey] = $value;
     }
 
     /**
@@ -168,9 +169,8 @@ final class Config
      */
     public static function reset(): void
     {
-        self::$config = [];
-        $instance = new self();
-        $instance->loadDefaults();
+        $temp = new self();
+        unset($temp);
     }
 
     /**

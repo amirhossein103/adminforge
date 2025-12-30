@@ -124,11 +124,11 @@ class MetaBox
     }
 
     /**
-     * Add meta box callback
+     * Add meta box callback (WordPress callback)
      *
      * @return void
      */
-    public function addMetaBox(): void
+    private function addMetaBox(): void
     {
         add_meta_box(
             $this->id,
@@ -141,12 +141,12 @@ class MetaBox
     }
 
     /**
-     * Render meta box content
+     * Render meta box content (WordPress callback)
      *
      * @param \WP_Post $post Current post object
      * @return void
      */
-    public function render(\WP_Post $post): void
+    private function render(\WP_Post $post): void
     {
         // Add nonce field for security
         if ($this->autoNonce) {
@@ -281,13 +281,13 @@ class MetaBox
     }
 
     /**
-     * Save meta box data
+     * Save meta box data (WordPress callback)
      *
      * @param int $postId Post ID
      * @param \WP_Post $post Post object
      * @return void
      */
-    public function save(int $postId, \WP_Post $post): void
+    private function save(int $postId, \WP_Post $post): void
     {
         // Check if nonce is set and valid
         if ($this->autoNonce) {

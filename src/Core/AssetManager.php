@@ -343,48 +343,6 @@ final class AssetManager
         return $stats;
     }
 
-    /**
-     * Inline critical CSS
-     *
-     * @param string $css CSS content
-     * @return void
-     */
-    public static function inlineCriticalCSS(string $css): void
-    {
-        echo '<style id="adminforge-critical-css">' . $css . '</style>';
-    }
-
-    /**
-     * Defer script loading
-     *
-     * @param string $handle Script handle
-     * @return void
-     */
-    public static function deferScript(string $handle): void
-    {
-        add_filter('script_loader_tag', function ($tag, $scriptHandle) use ($handle) {
-            if ($scriptHandle === $handle) {
-                return str_replace(' src', ' defer src', $tag);
-            }
-            return $tag;
-        }, 10, 2);
-    }
-
-    /**
-     * Async script loading
-     *
-     * @param string $handle Script handle
-     * @return void
-     */
-    public static function asyncScript(string $handle): void
-    {
-        add_filter('script_loader_tag', function ($tag, $scriptHandle) use ($handle) {
-            if ($scriptHandle === $handle) {
-                return str_replace(' src', ' async src', $tag);
-            }
-            return $tag;
-        }, 10, 2);
-    }
 }
 
 // Initialize

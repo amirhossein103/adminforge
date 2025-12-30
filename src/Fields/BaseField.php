@@ -299,7 +299,7 @@ abstract class BaseField implements FieldInterface
      * @param mixed $value Field value
      * @return self
      */
-    public function setValue($value): FieldInterface
+    public function setValue($value): self
     {
         $this->value = $value;
         return $this;

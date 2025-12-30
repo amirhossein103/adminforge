@@ -43,8 +43,12 @@ class MenuPage extends BasePage
     {
         parent::setDefaults();
 
-        $this->icon = $this->icon ?? Config::get('menu.icon', 'dashicons-admin-generic');
-        $this->position = $this->position ?? Config::get('menu.position', 99);
+        if (empty($this->icon)) {
+            $this->icon = Config::get('menu.icon', 'dashicons-admin-generic');
+        }
+        if ($this->position === null) {
+            $this->position = Config::get('menu.position', 99);
+        }
     }
 
     /**
@@ -69,11 +73,11 @@ class MenuPage extends BasePage
     }
 
     /**
-     * Render page wrapper
+     * Render page wrapper (WordPress callback)
      *
      * @return void
      */
-    public function renderPage(): void
+    private function renderPage(): void
     {
         if (!$this->canAccess()) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'adminforge'));

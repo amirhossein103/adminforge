@@ -75,11 +75,4 @@ final class Constants
     public const COLOR_SUCCESS = '#46b450';
     public const COLOR_ERROR = '#dc3232';
     public const COLOR_WARNING = '#ffb900';
-
-    /**
-     * Prevent instantiation
-     */
-    private function __construct()
-    {
-    }
 }

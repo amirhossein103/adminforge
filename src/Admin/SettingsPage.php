@@ -200,11 +200,11 @@ class SettingsPage extends MenuPage
     }
 
     /**
-     * Handle form submission
+     * Handle form submission (WordPress callback)
      *
      * @return void
      */
-    public function handleSave(): void
+    private function handleSave(): void
     {
         // Verify nonce
         if (!isset($_POST[$this->slug . '_nonce'])) {
@@ -231,8 +231,8 @@ class SettingsPage extends MenuPage
         foreach ($this->fields as $field) {
             $key = $field->getId();
 
-            // Get value from POST (for checkboxes, null means unchecked)
-            $rawValue = $_POST[$key] ?? null;
+            // Get value from POST (handle arrays for checkboxes/multi-selects)
+            $rawValue = isset($_POST[$key]) ? $_POST[$key] : null;
 
             // Sanitize using field's sanitize method
             $value = $field->sanitize($rawValue);

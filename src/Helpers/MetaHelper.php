@@ -16,17 +16,10 @@ namespace AdminForge\Helpers;
 defined('ABSPATH') || exit;
 
 /**
- * MetaHelper class - Singleton pattern with static cache
+ * MetaHelper class - Static helper with cache
  */
 final class MetaHelper
 {
-    /**
-     * Singleton instance
-     *
-     * @var MetaHelper|null
-     */
-    private static ?MetaHelper $instance = null;
-
     /**
      * Cache storage for all meta data
      * Key: post_id, Value: array of all meta
@@ -41,27 +34,6 @@ final class MetaHelper
      * @var array<int, bool>
      */
     private static array $loaded = [];
-
-    /**
-     * Private constructor (Singleton)
-     */
-    private function __construct()
-    {
-    }
-
-    /**
-     * Get singleton instance
-     *
-     * @return MetaHelper
-     */
-    public static function getInstance(): MetaHelper
-    {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
 
     /**
      * Load ALL meta for a post at once
@@ -287,21 +259,6 @@ final class MetaHelper
         add_action('delete_post', function ($postId) {
             self::removeCache((int) $postId);
         });
-    }
-
-    /**
-     * Prevent cloning
-     */
-    private function __clone()
-    {
-    }
-
-    /**
-     * Prevent unserializing
-     */
-    public function __wakeup()
-    {
-        throw new \Exception("Cannot unserialize singleton");
     }
 }
 

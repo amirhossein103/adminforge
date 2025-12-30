@@ -245,21 +245,4 @@ final class Helper
         global $wp;
         return home_url(add_query_arg([], $wp->request));
     }
-
-    /**
-     * Debug log (only in WP_DEBUG mode)
-     *
-     * @param mixed $data Data to log
-     * @param string $label Optional label
-     * @return void
-     */
-    public static function debug($data, string $label = ''): void
-    {
-        $context = is_array($data) || is_object($data) ? ['data' => $data] : ['value' => $data];
-        if ($label) {
-            $context['label'] = $label;
-        }
-
-        ErrorHandler::info($label ?: 'Debug', $context);
-    }
 }

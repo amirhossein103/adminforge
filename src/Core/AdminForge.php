@@ -66,7 +66,6 @@ final class AdminForge
     private function initHooks(): void
     {
         add_action('admin_enqueue_scripts', [$this, 'enqueueAssets']);
-        add_action('admin_menu', [$this, 'registerAdminMenu']);
         add_action('init', [$this, 'loadTextDomain']);
     }
 
@@ -75,7 +74,7 @@ final class AdminForge
      *
      * @return void
      */
-    public function loadTextDomain(): void
+    private function loadTextDomain(): void
     {
         load_plugin_textdomain(
             'adminforge',
@@ -90,13 +89,8 @@ final class AdminForge
      * @param string $hook Current admin page hook
      * @return void
      */
-    public function enqueueAssets(string $hook): void
+    private function enqueueAssets(string $hook): void
     {
-        // Only load on AdminForge pages
-        if (strpos($hook, 'adminforge') === false) {
-            return;
-        }
-
         $version = ADMINFORGE_VERSION;
 
         // Use minified assets in production
@@ -132,38 +126,6 @@ final class AdminForge
         ]);
     }
 
-    /**
-     * Register admin menu (placeholder)
-     *
-     * @return void
-     */
-    public function registerAdminMenu(): void
-    {
-        $menu_config = $this->config->get('menu');
-
-        add_menu_page(
-            $menu_config['title'] ?? 'AdminForge',
-            $menu_config['menu_title'] ?? 'AdminForge',
-            $menu_config['capability'] ?? 'manage_options',
-            $menu_config['slug'] ?? 'adminforge',
-            [$this, 'renderMainPage'],
-            $menu_config['icon'] ?? 'dashicons-admin-generic',
-            $menu_config['position'] ?? 99
-        );
-    }
-
-    /**
-     * Render main admin page (placeholder)
-     *
-     * @return void
-     */
-    public function renderMainPage(): void
-    {
-        echo '<div class="wrap">';
-        echo '<h1>' . esc_html__('AdminForge Framework', 'adminforge') . '</h1>';
-        echo '<p>' . esc_html__('Welcome to AdminForge - WordPress Admin Framework', 'adminforge') . '</p>';
-        echo '</div>';
-    }
 
     /**
      * Get config instance

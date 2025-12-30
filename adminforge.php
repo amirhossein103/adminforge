@@ -81,9 +81,6 @@ function adminforge_activate(): void
     if (!get_option('adminforge_version')) {
         add_option('adminforge_version', ADMINFORGE_VERSION);
     }
-
-    // Flush rewrite rules
-    flush_rewrite_rules();
 }
 register_activation_hook(__FILE__, __NAMESPACE__ . '\adminforge_activate');
 
@@ -94,7 +91,6 @@ register_activation_hook(__FILE__, __NAMESPACE__ . '\adminforge_activate');
  */
 function adminforge_deactivate(): void
 {
-    // Flush rewrite rules
-    flush_rewrite_rules();
+    // Cleanup if needed
 }
 register_deactivation_hook(__FILE__, __NAMESPACE__ . '\adminforge_deactivate');

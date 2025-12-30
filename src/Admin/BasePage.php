@@ -78,10 +78,18 @@ abstract class BasePage
      */
     protected function setDefaults(): void
     {
-        $this->pageTitle = $this->pageTitle ?? Config::get('menu.title', 'AdminForge');
-        $this->menuTitle = $this->menuTitle ?? Config::get('menu.menu_title', 'AdminForge');
-        $this->capability = $this->capability ?? Config::get('menu.capability', 'manage_options');
-        $this->slug = $this->slug ?? Config::get('menu.slug', 'adminforge');
+        if (empty($this->pageTitle)) {
+            $this->pageTitle = Config::get('menu.title', 'AdminForge');
+        }
+        if (empty($this->menuTitle)) {
+            $this->menuTitle = Config::get('menu.menu_title', 'AdminForge');
+        }
+        if (empty($this->capability)) {
+            $this->capability = Config::get('menu.capability', 'manage_options');
+        }
+        if (empty($this->slug)) {
+            $this->slug = Config::get('menu.slug', 'adminforge');
+        }
     }
 
     /**
@@ -133,7 +141,7 @@ abstract class BasePage
      * @param array<string, array<string, mixed>> $tabs Array of tabs configuration
      * @return TabManager
      */
-    protected function addTabs(array $tabs): TabManager
+    public function addTabs(array $tabs): TabManager
     {
         if ($this->tabManager === null) {
             $this->tabManager = new TabManager($tabs);

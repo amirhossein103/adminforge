@@ -390,6 +390,7 @@ final class SettingsManager
     {
         $keys = explode('.', $key);
         $current = &$array;
+        $lastKey = array_pop($keys);
 
         foreach ($keys as $k) {
             if (!isset($current[$k]) || !is_array($current[$k])) {
@@ -398,7 +399,7 @@ final class SettingsManager
             $current = &$current[$k];
         }
 
-        $current = $value;
+        $current[$lastKey] = $value;
     }
 
     /**
