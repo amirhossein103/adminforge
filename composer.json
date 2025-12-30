@@ -1,6 +1,6 @@
 {
   "name": "amirhossein103/adminforge",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "WordPress-native admin framework for building settings pages, meta boxes, and custom fields. Designed exclusively for WordPress theme and plugin developers.",
   "type": "library",
   "license": "MIT",
